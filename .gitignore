@@ -1,0 +1,57 @@
+# Arduino IDE
+*.o
+*.a
+*.so
+*.so.*
+*.elf
+*.exe
+*.dll
+*.dylib
+*.out
+*.app
+*.hex
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+.vscode/.browse.c_cpp.db-shm
+.vscode/.browse.c_cpp.db-wal
+.vscode/c_cpp_properties.json
+
+# VS Code
+.vscode/settings.json
+.vscode/extensions.json
+.vscode/launch.json
+.vscode/tasks.json
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+*~
+
+# Linux
+*~
+.swp
+.swo
+
+# IDE
+.idea/
+*.swp
+*.iml
+.classpath
+.project
+.settings/
+
+# Build artifacts
+build/
+dist/
+*.pyc
+__pycache__/
+
+# Temporary files
+*.tmp
+*.bak
