@@ -52,12 +52,23 @@ THROTTLE:3:value (where value is 0-255)
 
 ## Libraries Required
 
-Install via Arduino IDE Library Manager:
+Install via VS Code Arduino Maker Workshop or Arduino IDE Library Manager:
 
 - **Adafruit GFX Library**
 - **MCUFRIEND_kbv** (for ILI9486 display)
 
-### Installation
+### Installation in VS Code
+
+1. Click Arduino icon in VS Code sidebar (Maker Workshop)
+2. Click Library Manager
+3. Search for and install:
+   - "Adafruit GFX Library" by Adafruit
+   - "MCUFRIEND_kbv" by David Prentice
+
+Or use Command Palette (Cmd+Shift+P):
+- `Arduino: Manage Libraries`
+
+### Installation in Arduino IDE
 
 1. Open Arduino IDE → Sketch → Include Library → Manage Libraries
 2. Search for and install:
@@ -73,6 +84,19 @@ lib_deps =
 ```
 
 ## Building and Uploading
+
+### Using VS Code Arduino Maker Workshop
+
+1. Open the project folder in VS Code
+2. Click Arduino icon in sidebar to access Maker Workshop
+3. Select Board: Click on board selector → Arduino Mega 2560
+4. Select Port: Click on port selector → (your serial port)
+5. Build/Compile: Click Compile button (or Cmd+B)
+6. Upload: Click Upload button
+
+Alternatively, use Command Palette (Cmd+Shift+P):
+- `Arduino: Verify/Compile`
+- `Arduino: Upload`
 
 ### Using Arduino IDE
 

@@ -165,13 +165,15 @@ Wiring (see docs/HARDWARE_SETUP.md for detailed diagram):
 SOFTWARE REQUIREMENTS:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Arduino IDE Requirements:
-✓ Arduino IDE 1.8.x or later (or Arduino IDE 2.x)
+VS Code with Arduino Maker Workshop:
+✓ VS Code (latest version)
+✓ Arduino Maker Workshop Extension
 ✓ Arduino Mega 2560 board package
-✓ Adafruit GFX Library (install via Library Manager)
-✓ MCUFRIEND_kbv Library (install via Library Manager)
+✓ Adafruit GFX Library (install via Maker Workshop)
+✓ MCUFRIEND_kbv Library (install via Maker Workshop)
 
-Optional:
+Alternative Options:
+✓ Arduino IDE 1.8.x or later (or Arduino IDE 2.x)
 ✓ PlatformIO (alternative to Arduino IDE)
 ✓ Git (for version control - already initialized)
 
@@ -180,31 +182,36 @@ Optional:
 GETTING STARTED (5 minutes):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-1. INSTALL LIBRARIES (2 min)
-   • Open Arduino IDE
-   • Sketch → Include Library → Manage Libraries
+VS CODE METHOD (RECOMMENDED):
+
+1. OPEN PROJECT IN VS CODE (1 min)
+   • File → Open Folder
+   • Select: /Volumes/Extreme Pro/src/arduino/Display-Ex
+   • VS Code recognizes it as Arduino project
+
+2. INSTALL LIBRARIES (1.5 min)
+   • Click Arduino icon in sidebar (Maker Workshop)
+   • Click Library Manager
    • Search: "Adafruit GFX" → Install by Adafruit
    • Search: "MCUFRIEND_kbv" → Install by David Prentice
-   • Click Close
 
-2. CONNECT HARDWARE (1 min)
+3. CONFIGURE BOARD & PORT (0.5 min)
+   • Click Arduino icon → Board Manager → Arduino Mega 2560
+   • Click Arduino icon → Port Selector → (your COM port)
+
+4. CONNECT & TEST (1 min)
    • Wire display to Arduino per HARDWARE_SETUP.md
-   • Plug USB cable into Arduino Mega and computer
-   • Select Tools → Board → Arduino Mega 2560
-   • Select Tools → Port → (your COM port)
+   • Plug USB cable into Arduino Mega
+   • Upload Test Sketch: Arduino icon → Upload (Display-Ex-Test.ino)
+   • Watch display show colors
+   • Open Serial Monitor: Arduino icon → Serial Monitor (115200 baud)
 
-3. TEST DISPLAY (1 min)
-   • Open: Display-Ex-Test.ino
-   • Click Upload (Ctrl+U)
-   • Watch display show color test
-   • Open Serial Monitor → verify "Display found: 0x9486"
-
-4. UPLOAD MAIN APP (1 min)
-   • Open: Display-Ex.ino
-   • Click Upload
+5. UPLOAD MAIN APP (1 min)
+   • Select Display-Ex.ino
+   • Click Arduino icon → Upload
    • Should show: "DCC Monitor Display initialized"
-   
-See QUICKSTART.md for detailed instructions.
+
+See QUICKSTART.md for detailed VS Code instructions.
 
 ═══════════════════════════════════════════════════════════════════════════
 
@@ -326,7 +333,8 @@ Documentation:
    • docs/PROTOCOL.md - Serial protocol details
    • docs/HARDWARE_SETUP.md - Wiring and connections
 
-Online References:
+VS Code & Arduino Tools:
+   • Arduino Maker Workshop Extension Documentation
    • Arduino Official: https://www.arduino.cc/
    • MCUFRIEND Library: https://github.com/prenticedavid/MCUFRIEND_kbv
    • Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library
@@ -358,6 +366,13 @@ Total Project: 438 lines of code + ~575 lines of documentation
                     ✓ PROJECT READY FOR DEVELOPMENT
 
                 Start with: QUICKSTART.md or README.md
-                Questions? See: docs/HARDWARE_SETUP.md
+
+VS CODE QUICK REFERENCE:
+   • Arduino icon in sidebar → Access all tools
+   • Cmd+Shift+P → Command Palette for Arduino commands
+   • Compile: Arduino icon → Compile
+   • Upload: Arduino icon → Upload
+   • Serial Monitor: Arduino icon → Serial Monitor
+   • Library Manager: Arduino icon → Library Manager
 
 ═══════════════════════════════════════════════════════════════════════════

@@ -19,33 +19,53 @@ Display-Ex/
 
 ## 5-Minute Setup
 
-### 1. Install Arduino IDE (if not already done)
-- Download from: https://www.arduino.cc/en/software
-- Install Arduino Mega 2560 board package
+### 1. Set Up Arduino in VS Code
+If you haven't already:
+- Install **Arduino Maker Workshop** extension (search in VS Code Extensions)
+- The extension will guide you through Arduino setup on first use
+- It will detect your Arduino installation and board packages
 
-### 2. Install Required Libraries
-In Arduino IDE:
-- Sketch → Include Library → Manage Libraries
+### 2. Open the Project in VS Code
+1. File → Open Folder
+2. Navigate to and select: `/Volumes/Extreme Pro/src/arduino/Display-Ex`
+3. VS Code will recognize this as an Arduino project
+
+### 3. Install Required Libraries
+In VS Code:
+- Click the Arduino icon in the sidebar (Maker Workshop)
+- Navigate to Library Manager
 - Search for and install:
   - **Adafruit GFX Library**
   - **MCUFRIEND_kbv**
+- Or use: `Command Palette (Cmd+Shift+P) → Arduino: Manage Libraries`
 
-### 3. Connect Hardware
+### 4. Configure Board & Port
+1. Click Arduino icon in sidebar → Board Manager
+2. Select Board: **Arduino Mega 2560**
+3. Select Port: **(your USB COM port)**
+4. Alternatively use Command Palette:
+   - `Arduino: Select Board` 
+   - `Arduino: Select Serial Port`
+
+### 5. Connect Hardware
 1. Wire ILI9486 display to Arduino Mega (see [HARDWARE_SETUP.md](docs/HARDWARE_SETUP.md))
-2. Connect USB cable to Arduino Mega
+2. Connect USB cable to Arduino Mega to your computer
 3. Connect DCC Command Station via serial (USB or UART)
 
-### 4. Upload Code
-1. Open `Display-Ex.ino` in Arduino IDE
-2. Tools → Board → Arduino Mega 2560
-3. Tools → Port → (select your Arduino COM port)
-4. Click Upload (Ctrl+U)
-5. Wait for "Upload successful"
+### 6. Build and Upload
+1. Click Arduino icon in sidebar → Compile
+   - Or use: `Command Palette → Arduino: Verify/Compile`
+   - Wait for "Build complete"
+2. Click Arduino icon → Upload 
+   - Or use: `Command Palette → Arduino: Upload`
+   - Wait for "Upload complete"
 
-### 5. Test
-1. Tools → Serial Monitor (115200 baud)
+### 7. Test
+1. Click Arduino icon → Open Serial Monitor
+   - Or use: `Command Palette → Arduino: Open Serial Monitor`
+   - Set baud rate to **115200**
 2. You should see: `DCC Monitor Display initialized`
-3. Try sending: `POWER:ON` (and click Send)
+3. Try sending: `POWER:ON` (type and press Enter)
 4. Display should update
 
 ## Sending Status Updates
@@ -129,6 +149,38 @@ Then add display code similar to the existing turnouts.
 
 See full troubleshooting in [HARDWARE_SETUP.md](docs/HARDWARE_SETUP.md)
 
+## VS Code Arduino Maker Workshop Tips
+
+### Quick Commands (Use Command Palette: Cmd+Shift+P)
+- `Arduino: Verify/Compile` - Check code without uploading
+- `Arduino: Upload` - Compile and upload to board
+- `Arduino: Open Serial Monitor` - Monitor serial output
+- `Arduino: Select Board` - Change target board
+- `Arduino: Select Serial Port` - Change USB port
+- `Arduino: Manage Libraries` - Install/remove libraries
+
+### Keyboard Shortcuts
+- `Cmd+Shift+P` - Open Command Palette
+- `Cmd+B` - Build/Compile
+- `Cmd+K Cmd+V` - Open Preview for Markdown files
+
+### Status Bar
+- Bottom of VS Code shows:
+  - Current board selection
+  - Selected serial port
+  - Upload/Compile status
+
+### Troubleshooting in VS Code
+- Open **Output** panel (View → Output) to see detailed compilation messages
+- Check **Problems** panel (View → Problems) for syntax errors
+- Use **Serial Monitor** to debug by sending test messages
+
+### Setting Up Code Completion
+The Arduino Maker Workshop extension provides IntelliSense for:
+- Arduino built-in functions
+- Installed libraries
+- Custom functions and variables
+
 ## Next Steps
 
 ### Immediate
@@ -151,10 +203,15 @@ See full troubleshooting in [HARDWARE_SETUP.md](docs/HARDWARE_SETUP.md)
 
 ## Getting Help
 
-- **Arduino IDE Help**: https://www.arduino.cc/en/Guide
-- **MCUFRIEND Library**: https://github.com/prenticedavid/MCUFRIEND_kbv
-- **Adafruit GFX**: https://learn.adafruit.com/adafruit-gfx-graphics-library
-- **DCC Info**: https://www.nmra.org/
+**VS Code & Arduino Maker Workshop:**
+- Arduino Maker Workshop Extension Documentation (in VS Code Help)
+- Arduino Official: https://www.arduino.cc/
+- VS Code Arduino Support: https://code.visualstudio.com/docs/other/arduino
+
+**Arduino Libraries & Boards:**
+- MCUFRIEND Library: https://github.com/prenticedavid/MCUFRIEND_kbv
+- Adafruit GFX: https://learn.adafruit.com/adafruit-gfx-graphics-library
+- DCC Info: https://www.nmra.org/
 
 ## Important Files
 
