@@ -5,7 +5,7 @@ This document describes the message format used for communication between the DC
 ## Overview
 
 - **Medium**: Serial (USB/UART)
-- **Baud Rate**: 115200
+- **Baud Rate**: 115200 by default; configurable in `config.h`
 - **Line Ending**: LF (`\n`) or CR+LF (`\r\n`)
 - **Direction**: Command Station → Display Monitor (one-way)
 
@@ -41,14 +41,18 @@ POWER:OFF
 TURNOUT:<number>:<state>
 ```
 
-- `<number>`: 1, 2, or 3 (turnout identifier)
-- `<state>`: `THROWN` or `CLOSED`
+- `<number>`: the configured turnout IDs (default 101, 102, 103).
+  Legacy IDs 1, 2, and 3 address the first, second, and third displayed
+  turnouts, respectively, unless an ID is explicitly configured for a
+  different turnout. Configured IDs always take precedence.
+- `<state>`: `OPEN`, `THROWN`, or `CLOSED`. Both `OPEN` and `THROWN`
+  display as `OPEN`; `CLOSED` displays as `CLOSED`.
 
 **Examples**:
 ```
-TURNOUT:1:THROWN
-TURNOUT:2:CLOSED
-TURNOUT:3:THROWN
+TURNOUT:101:OPEN
+TURNOUT:102:CLOSED
+TURNOUT:103:THROWN
 ```
 
 ### Throttle/Speed Control
@@ -57,7 +61,7 @@ TURNOUT:3:THROWN
 THROTTLE:<loco_id>:<speed>
 ```
 
-- `<loco_id>`: Locomotive identifier (currently monitoring loco 3)
+- `<loco_id>`: Locomotive identifier configured in `config.h` (default 3)
 - `<speed>`: 0-255 (PWM/speed value)
   - 0 = Stopped
   - 128 = Half speed
@@ -104,16 +108,16 @@ ERROR:<code>:<message>              # Error reporting
 ```
 System startup:
   → POWER:OFF
-  → TURNOUT:1:CLOSED
-  → TURNOUT:2:CLOSED
-  → TURNOUT:3:CLOSED
+  → TURNOUT:101:CLOSED
+  → TURNOUT:102:CLOSED
+  → TURNOUT:103:CLOSED
   → THROTTLE:3:0
 
 User turns on track power:
   → POWER:ON
 
 User throws turnout 1:
-  → TURNOUT:1:THROWN
+  → TURNOUT:101:THROWN
 
 User controls Loco 3 throttle:
   → THROTTLE:3:50
@@ -141,9 +145,9 @@ Example pseudocode for Command Station:
 ```cpp
 void reportTrackStatus() {
   Serial.println("POWER:" + (trackPowerOn ? "ON" : "OFF"));
-  Serial.println("TURNOUT:1:" + (turnout1Thrown ? "THROWN" : "CLOSED"));
-  Serial.println("TURNOUT:2:" + (turnout2Thrown ? "THROWN" : "CLOSED"));
-  Serial.println("TURNOUT:3:" + (turnout3Thrown ? "THROWN" : "CLOSED"));
+  Serial.println("TURNOUT:101:" + (turnout1Thrown ? "THROWN" : "CLOSED"));
+  Serial.println("TURNOUT:102:" + (turnout2Thrown ? "THROWN" : "CLOSED"));
+  Serial.println("TURNOUT:103:" + (turnout3Thrown ? "THROWN" : "CLOSED"));
   Serial.println("THROTTLE:3:" + throttle3Speed);
 }
 ```

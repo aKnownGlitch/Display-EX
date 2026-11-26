@@ -12,7 +12,7 @@ An Arduino Mega application that monitors DCC (Digital Command Control) command 
 
 The application displays real-time information:
 - **Track Power**: ON/OFF status (red/green indicator)
-- **Turnout Status**: 3 Turnouts showing THROWN/CLOSED state
+- **Turnout Status**: Turnouts 101–103 showing OPEN/CLOSED state
 - **Throttle Setting**: Speed control (0-255) for Locomotive 3 with visual bar
 
 ## Wiring
@@ -44,11 +44,15 @@ The display receives status updates from the DCC Command Station via serial (115
 
 ```
 POWER:ON       or POWER:OFF
-TURNOUT:1:THROWN or TURNOUT:1:CLOSED
-TURNOUT:2:THROWN or TURNOUT:2:CLOSED
-TURNOUT:3:THROWN or TURNOUT:3:CLOSED
+TURNOUT:101:OPEN or TURNOUT:101:CLOSED
+TURNOUT:102:OPEN or TURNOUT:102:CLOSED
+TURNOUT:103:OPEN or TURNOUT:103:CLOSED
 THROTTLE:3:value (where value is 0-255)
 ```
+
+`THROWN` is also accepted and displayed as `OPEN`. Legacy turnout IDs 1–3
+remain aliases for the three configured turnouts, unless they conflict with
+a configured ID, which takes precedence.
 
 ## Libraries Required
 
@@ -113,13 +117,12 @@ platformio run -t upload
 
 ## Configuration
 
-Modify these defines in the sketch to customize:
+Edit `config.h` to customize the layout name, locomotive ID, turnout IDs,
+serial baud rate and display update interval. IDs must be in the range
+1–32767, and turnout IDs must be unique. Keep the layout name short enough
+to fit in the header. Recompile and upload after changing settings.
 
-```cpp
-#define SERIAL_BAUD 115200      // Serial communication speed
-#define UPDATE_INTERVAL 1000    // Display refresh rate (ms)
-#define TFT_ROTATION 1          // 0=Portrait, 1=Landscape, etc.
-```
+Serial messages must use the configured IDs and baud rate.
 
 ## Display Features
 

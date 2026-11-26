@@ -4,52 +4,40 @@
 
 ### Pin Assignments for ILI9486 Display
 
-The sketch uses the following pin configuration (can be modified in the code):
+The installed display is a HiLetgo 3.5-inch 480x320, 36-pin Mega2560
+shield ([product listing](https://www.amazon.com/dp/B073R7Q8FF)), advertised
+with an ILI9486/ILI9488 controller and a **16-bit parallel bus**, not SPI.
+Plug the shield directly into the Mega with power disconnected.
+
+The bundled MCUFRIEND_kbv library uses `USE_SPECIAL` in
+`libraries/MCUFRIEND_kbv/utility/mcufriend_shield.h` and
+`USE_MEGA_16BIT_SHIELD` in `utility/mcufriend_special.h`. This selects:
 
 ```
-Arduino Pin    Signal    ILI9486 Pin    Description
--------        ------    -----------    -----------
-50             MISO      12 (SDO)       Data input from display
-51             MOSI      11 (SDI)       Data output to display
-52             SCK       13 (SCK)       Serial clock
-10             CS        10             Chip select (active low)
-9              DC/RS     9              Data/Command control
-8              WR        8              Write strobe
-7              RD        7              Read strobe
-6              RST       25             Reset
-GND            GND       1,2,20         Ground
-5V             VCC       3,4            Power supply
-5V             LED+      19             Backlight positive
-GND            LED-      20             Backlight negative
+Arduino Pin    LCD Signal
+-----------    ----------
+37..30         D0..D7 (in that order)
+22..29         D8..D15 (in that order)
+43             RD
+39             WR
+38             RS/DC
+40             CS
+41             RESET
 ```
+
+These are the library's Mega 16-bit mapping, not configurable sketch pins.
+Defining `TFT_CS`, etc., or passing constructor arguments does not change
+MCUFRIEND's wiring. Verify the shield revision/pinout if it still stays white.
+Do not use the previous SPI jumper-wiring instructions.
 
 ### Display Module Specifications
 
 - **Resolution**: 480 × 320 pixels
 - **Color Depth**: 16-bit (65,536 colors)
-- **Controller**: ILI9486
-- **Interface**: 8-bit or 16-bit SPI
+- **Controller**: ILI9486 or ILI9488 (listing; read ID when supported)
+- **Interface**: 16-bit parallel
 - **Voltage**: 3.3V logic, 5V power capable
 - **Backlight**: LED (adjustable brightness via PWM if needed)
-
-### Wiring Diagram
-
-```
-Arduino Mega          ILI9486 Module
------------          ---------------
-         50 -------> SDO (12)
-         51 -------> SDI (11)
-         52 -------> SCK (13)
-         10 -------> CS  (10)
-          9 -------> DC  (9)
-          8 -------> WR  (8)
-          7 -------> RD  (7)
-          6 -------> RST (25)
-        GND -------> GND (1,2,20)
-         5V -------> VCC (3,4)
-         5V -------> LED+ (19)
-        GND -------> LED- (20)
-```
 
 ### Serial Connection for Command Station-EX
 
@@ -91,19 +79,22 @@ GND ----------------> GND
    - Check GND connections (should be common)
    - Use multimeter to verify voltage at display
 
-2. **Check SPI pins**:
-   ```bash
-   # In Arduino IDE Serial Monitor (115200 baud)
-   # You should see: "Display ID: 0x9486" or "ILI9486 display found"
-   ```
+2. **Check the parallel bus configuration**:
+   - Confirm the compile output selects `USE_MEGA_16BIT_SHIELD` from the
+     bundled library, not the default UNO shield mapping.
+   - Serial Monitor (115200 baud) prints the raw controller ID.
+   - `0xD3D3` can occur on write-only shields; it does not identify a controller.
+     The sketch explicitly warns before trying ILI9486 as a fallback.
 
 3. **Reset display**:
    - Briefly (< 100ms) pull RST low, then high
    - This should be automatic in setup()
 
 4. **Verify MCUFRIEND library**:
-   - Use example sketch: `File → Examples → MCUFRIEND_kbv → Diagnostic`
-   - This will help identify display type and configuration
+   - The sketch now runs its existing color/text test before drawing the layout.
+   - For deeper tests, use `graphictest_kbv` in its own sketch folder.
+   - Arduino compiles all `.ino` files in a sketch folder, even closed editor tabs.
+     A separate diagnostic needs its own folder and matching primary filename.
 
 ### Serial Communication Issues
 
@@ -121,10 +112,11 @@ GND ----------------> GND
 
 If you have a different ILI9486 module variant:
 
-1. Run the MCUFRIEND diagnostic sketch
+1. Run the MCUFRIEND `graphictest_kbv` example in its own sketch folder
 2. Note the display ID it reports
 3. Update the library or pin configuration as needed
-4. Some modules use 8-bit parallel instead of SPI (would require code changes)
+4. Other shields may use different 8-bit or 16-bit parallel mappings.
+   Select the matching library driver only after verifying the hardware pinout.
 
 ## Testing After Assembly
 
@@ -135,27 +127,27 @@ If you have a different ILI9486 module variant:
 5. Open Serial Monitor (115200 baud)
 6. You should see:
    ```
-   ILI9486 display found
-   DCC Monitor Display initialized
+   Display bus: Mega 16-bit parallel shield (bundled library)
+   ...
+   Display commands sent; confirm output on the screen.
    Waiting for status messages...
    ```
-7. Send test commands:
+7. Verify red, green and blue screens, then test text and the DCC layout.
+   Serial messages only confirm commands were sent, not that the LCD responded.
+8. Send test commands:
    ```
    POWER:ON
    TURNOUT:1:THROWN
    THROTTLE:3:128
    ```
-8. Display should update with new values
+9. Display should update with new values
 
 ## Performance Optimization
 
 If display updates are slow:
 
-1. Increase SPI clock speed:
-   ```cpp
-   // In Display-Ex.ino setup()
-   SPI.setClockDivider(SPI_CLOCK_DIV2);  // Faster SPI
-   ```
+1. Keep the Mega 16-bit parallel driver enabled. SPI clock settings do not
+   affect this display.
 
 2. Reduce display update frequency:
    ```cpp

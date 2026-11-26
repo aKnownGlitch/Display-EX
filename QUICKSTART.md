@@ -75,12 +75,12 @@ The Command Station sends messages to the display in this format:
 ```
 POWER:ON              # Track power is on
 POWER:OFF             # Track power is off
-TURNOUT:1:THROWN      # Turnout 1 is thrown (diverging)
-TURNOUT:1:CLOSED      # Turnout 1 is closed (normal)
-TURNOUT:2:THROWN
-TURNOUT:2:CLOSED
-TURNOUT:3:THROWN
-TURNOUT:3:CLOSED
+TURNOUT:101:THROWN    # Displayed as OPEN
+TURNOUT:101:CLOSED
+TURNOUT:102:OPEN
+TURNOUT:102:CLOSED
+TURNOUT:103:THROWN
+TURNOUT:103:CLOSED
 THROTTLE:3:0          # Loco 3 at 0 speed
 THROTTLE:3:128        # Loco 3 at half speed
 THROTTLE:3:255        # Loco 3 at full speed
@@ -96,22 +96,28 @@ Serial.println("THROTTLE:3:150");
 ## Display Layout
 
 ```
-╔════════════════════════════════╗
-║      DCC Monitor               ║
-╠════════════════════════════════╣
-║ Track Power:              [ON] ║   (Green if ON, Red if OFF)
-║                                ║
-║ Turnouts:                      ║
-║   T1: CLOSED                   ║   (Cyan=CLOSED, Magenta=THROWN)
-║   T2: CLOSED                   ║
-║   T3: CLOSED                   ║
-║                                ║
-║ Loco 3 Throttle:         150/255║
-║ ████████████░░░░░░░░░░░░░░░░░░  ║   (Visual throttle bar)
-╚════════════════════════════════╝
+DCC-EX Monitor                Weinheimer-RR
+--------------------------------------------
+TRACK POWER OFF                     (red/green)
+TURNOUT 101: CLOSED
+TURNOUT 102: CLOSED
+TURNOUT 103: CLOSED
+--------------------------------------------
+LOCO: 3
+THROTTLE     [████████████                ]
 ```
 
+The throttle bar represents 0–255. Turnout IDs 1–3 remain accepted as
+aliases for the three configured turnouts; `THROWN` and `OPEN` both appear as
+`OPEN`. Configured IDs take precedence over aliases if they overlap.
+
 ## Customizing the Code
+
+Edit `config.h` to change the layout name, locomotive ID, three turnout IDs,
+serial baud rate, or display update interval. Turnout IDs must be unique;
+IDs must be between 1 and 32767. Keep the layout name short enough to fit
+in the header. Recompile and upload after changing settings. Send serial
+messages using the configured IDs and baud rate.
 
 ### Change display rotation (portrait/landscape)
 In `Display-Ex.ino`, find this line and change the value:
@@ -119,23 +125,9 @@ In `Display-Ex.ino`, find this line and change the value:
 tft.setRotation(1);  // 0=Portrait, 1=Landscape, 2=Portrait flip, 3=Landscape flip
 ```
 
-### Change update interval
-```cpp
-#define UPDATE_INTERVAL 1000  // milliseconds (currently 1 second)
-```
-
-### Monitor a different locomotive
-In `processCommand()`, change `THROTTLE:3` to `THROTTLE:5` (for example) to monitor locomotive 5 instead.
-
 ### Add more turnouts
-Follow the pattern in `processCommand()` for TURNOUT:1-3 and add:
-```cpp
-else if (strncmp(command, "TURNOUT:4:", 10) == 0) {
-  status.turnout4 = strcmp(&command[10], "THROWN") == 0;
-}
-```
-
-Then add display code similar to the existing turnouts.
+Extend the status structure and turnout parsing in `processCommand()`, then
+update the rows and positioning in `updateDisplay()`.
 
 ## Troubleshooting
 
