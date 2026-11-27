@@ -51,7 +51,8 @@ RX1 (pin 19) ------> TX
 GND ----------------> GND
 ```
 
-**Note**: If using multiple serial ports on Mega, can use Serial1-Serial3 instead of Serial.
+The sketch reads both Serial (USB/pins 0-1) and Serial1 (pins 18-19).
+Using Serial1 leaves the USB serial port available for uploads and diagnostics.
 
 ## Power Supply Considerations
 

@@ -40,7 +40,11 @@ GND           GND (20)      Backlight Ground
 
 ## Serial Protocol
 
-The display receives status updates from the DCC Command Station via serial (115200 baud) using this message format:
+The display reads serial input at 115200 baud on both USB (`Serial`) and
+pins 18/19 (`Serial1`). Native DCC-EX turnout responses such as `<H 101 1>`
+(thrown, displayed as OPEN) and `<H 101 0>` (CLOSED) update configured
+turnouts without a newline. Native power and throttle responses are not yet
+supported. The following newline-delimited custom format is also supported:
 
 ```
 POWER:ON       or POWER:OFF

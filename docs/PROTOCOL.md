@@ -6,17 +6,30 @@ This document describes the message format used for communication between the DC
 
 - **Medium**: Serial (USB/UART)
 - **Baud Rate**: 115200 by default; configurable in `config.h`
-- **Line Ending**: LF (`\n`) or CR+LF (`\r\n`)
+- **Input**: Mega `Serial` (USB/pins 0-1) and `Serial1` (pins 18-19)
+- **Framing**: DCC-EX responses use `<...>`; custom messages use LF or CR+LF
 - **Direction**: Command Station → Display Monitor (one-way)
 
 ## Message Format
 
-Each message consists of:
+Native DCC-EX turnout responses are accepted directly:
+
+```
+<H 101 1>
+<H 101 0>
+```
+
+`1` displays the configured turnout as `OPEN` (thrown), and `0` displays
+it as `CLOSED`. Only configured turnout IDs are accepted; legacy aliases
+apply only to the custom format. A newline is not required between native
+responses. Other native response types are not yet interpreted.
+
+The existing custom messages consist of:
 ```
 COMMAND:PARAM1:PARAM2:...
 ```
 
-Messages are case-insensitive on parsing but should use uppercase for consistency.
+Custom messages are case-sensitive and use uppercase.
 
 ## Defined Messages
 
@@ -76,11 +89,10 @@ THROTTLE:3:255    # Loco 3 at full speed
 
 ## Parsing Rules
 
-1. Messages are terminated with newline (`\n`)
-2. Carriage returns (`\r`) are stripped
-3. Unknown messages are logged but do not cause errors
-4. Malformed messages are silently ignored or logged
-5. Whitespace should not appear in messages (but parsers should trim for robustness)
+1. Native responses end with `>`; custom messages end with newline (`\n`).
+2. Carriage returns (`\r`) are stripped.
+3. Unsupported native responses are ignored; unknown custom messages are logged.
+4. Invalid native turnout responses and oversized messages are logged and discarded.
 
 ## Status Update Frequency
 
@@ -130,7 +142,8 @@ User controls Loco 3 throttle:
 
 ### Arduino Display Side
 
-The display sketch expects messages in this format and updates the UI accordingly. See `processCommand()` function in Display-Ex.ino for implementation details.
+The display accepts native turnout responses and the custom messages above.
+Native power and throttle responses are not yet implemented.
 
 ### Command Station-EX Side
 
